@@ -1,0 +1,2 @@
+rootProject.name='imdbAppAndroid'
+include ':app'
