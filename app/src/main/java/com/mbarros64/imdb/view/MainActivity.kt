@@ -1,12 +1,12 @@
-package com.mbarros64.imdb
+package com.mbarros64.imdb.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mbarros64.imdb.Adapter.MoviesAdapter
+import com.mbarros64.imdb.R
 import com.mbarros64.imdb.api.MoviesRepository
 import com.mbarros64.imdb.model.Movie
 
