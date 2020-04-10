@@ -34,11 +34,6 @@ class MoviesAdapter(
         holder.bind(movies[position])
     }
 
-    fun updateMovies(movies: List<Movie>) {
-        this.movies = movies as MutableList<Movie>
-        notifyDataSetChanged()
-    }
-
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val poster: ImageView = itemView.findViewById(R.id.item_movie_poster)
