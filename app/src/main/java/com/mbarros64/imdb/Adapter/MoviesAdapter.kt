@@ -11,9 +11,16 @@ import com.mbarros64.imdb.R
 import com.mbarros64.imdb.model.Movie
 
 class MoviesAdapter(
-    private var movies: List<Movie>
+    private var movies: MutableList<Movie>
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
+    fun appendMovies(movies: List<Movie>) {
+        this.movies.addAll(movies)
+        notifyItemRangeInserted(
+            this.movies.size,
+            movies.size - 1
+        )
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -28,7 +35,7 @@ class MoviesAdapter(
     }
 
     fun updateMovies(movies: List<Movie>) {
-        this.movies = movies
+        this.movies = movies as MutableList<Movie>
         notifyDataSetChanged()
     }
 
