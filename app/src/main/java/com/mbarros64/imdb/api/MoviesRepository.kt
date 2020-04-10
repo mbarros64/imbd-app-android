@@ -2,6 +2,7 @@ package com.mbarros64.imdb.api
 
 import android.util.Log
 import com.mbarros64.imdb.model.GetMoviesResponse
+import com.mbarros64.imdb.model.Movie
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +22,11 @@ object MoviesRepository {
     }
 }
 
-fun getPopularMovies(page: Int = 1) {
+fun getPopularMovies(
+    page: Int = 1,
+    onSuccess: (movies: List<Movie>) -> Unit,
+    onError: () -> Unit
+) {
     api.getPopularMovies(page = page)
         .enqueue(object : Callback<GetMoviesResponse> {
             override fun onResponse(
@@ -32,15 +37,17 @@ fun getPopularMovies(page: Int = 1) {
                     val responseBody = response.body()
 
                     if (responseBody != null) {
-                        Log.d("Repository", "Movies: ${responseBody.movies}")
+                        onSuccess.invoke(responseBody.movies)
                     } else {
-                        Log.d("Repository", "Failed to get response")
+                        onError.invoke()
                     }
+                } else {
+                    onError.invoke()
                 }
             }
 
             override fun onFailure(call: Call<GetMoviesResponse>, t: Throwable) {
-                Log.e("Repository", "onFailure", t)
+                onError.invoke()
             }
         })
 }
