@@ -10,6 +10,7 @@ import com.mbarros64.imdb.Adapter.MoviesAdapter
 import com.mbarros64.imdb.R
 import com.mbarros64.imdb.api.MoviesRepository
 import com.mbarros64.imdb.api.MoviesRepository.getTopRatedMovies
+import com.mbarros64.imdb.api.MoviesRepository.getUpcomingMovies
 import com.mbarros64.imdb.model.Movie
 
 class MainActivity : AppCompatActivity() {
@@ -22,8 +23,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var topRatedMoviesAdapter: MoviesAdapter
     private lateinit var topRatedMoviesLayoutMgr: LinearLayoutManager
 
+    private lateinit var upcomingMovies: RecyclerView
+    private lateinit var upcomingMoviesAdapter: MoviesAdapter
+    private lateinit var upcomingMoviesLayoutMgr: LinearLayoutManager
+
     private var popularMoviesPage = 1
     private var topRatedMoviesPage = 1
+    private var upcomingMoviesPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,12 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager.HORIZONTAL,
             false
         )
+        upcomingMovies = findViewById(R.id.upcoming_movies)
+        upcomingMoviesLayoutMgr = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         popularMovies.layoutManager = popularMoviesLayoutMgr
         popularMoviesAdapter = MoviesAdapter(mutableListOf())
         popularMovies.adapter = popularMoviesAdapter
@@ -49,8 +61,13 @@ class MainActivity : AppCompatActivity() {
         topRatedMoviesAdapter = MoviesAdapter(mutableListOf())
         topRatedMovies.adapter = topRatedMoviesAdapter
 
+        upcomingMovies.layoutManager = upcomingMoviesLayoutMgr
+        upcomingMoviesAdapter = MoviesAdapter(mutableListOf())
+        upcomingMovies.adapter = upcomingMoviesAdapter
+
         getPopularMovies()
         getTopRatedMovies()
+        getUpcomingMovies()
 
     }
     private fun getPopularMovies() {
@@ -64,6 +81,14 @@ class MainActivity : AppCompatActivity() {
         MoviesRepository.getTopRatedMovies(
             topRatedMoviesPage,
             ::onTopRatedMoviesFetched,
+            ::onError
+        )
+    }
+
+    private fun getUpcomingMovies() {
+        MoviesRepository.getUpcomingMovies(
+            upcomingMoviesPage,
+            ::onUpcomingMoviesFetched,
             ::onError
         )
     }
@@ -99,6 +124,21 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+    private fun attachUpcomingMoviesOnScrollListener() {
+        upcomingMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val totalItemCount = upcomingMoviesLayoutMgr.itemCount
+                val visibleItemCount = upcomingMoviesLayoutMgr.childCount
+                val firstVisibleItem = upcomingMoviesLayoutMgr.findFirstVisibleItemPosition()
+
+                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
+                    upcomingMovies.removeOnScrollListener(this)
+                    upcomingMoviesPage++
+                    getUpcomingMovies()
+                }
+            }
+        })
+    }
     private fun onPopularMoviesFetched(movies: List<Movie>) {
         popularMoviesAdapter.appendMovies(movies)
         attachPopularMoviesOnScrollListener()
@@ -107,7 +147,10 @@ class MainActivity : AppCompatActivity() {
         topRatedMoviesAdapter.appendMovies(movies)
         attachTopRatedMoviesOnScrollListener()
     }
-
+    private fun onUpcomingMoviesFetched(movies: List<Movie>) {
+        upcomingMoviesAdapter.appendMovies(movies)
+        attachUpcomingMoviesOnScrollListener()
+    }
 
     private fun onError() {
         Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
