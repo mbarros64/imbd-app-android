@@ -3,7 +3,6 @@ package com.mbarros64.imdb.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+
     private lateinit var popularMovies: RecyclerView
     private lateinit var popularMoviesAdapter: MoviesAdapter
     private lateinit var popularMoviesLayoutMgr: LinearLayoutManager
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var upcomingMoviesPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -65,20 +66,21 @@ class MainActivity : AppCompatActivity() {
             false
         )
         popularMovies.layoutManager = popularMoviesLayoutMgr
-        popularMoviesAdapter = MoviesAdapter(mutableListOf())
+        popularMoviesAdapter = MoviesAdapter(mutableListOf()) { movie -> showMovieDetails(movie) }
         popularMovies.adapter = popularMoviesAdapter
 
         topRatedMovies.layoutManager = topRatedMoviesLayoutMgr
-        topRatedMoviesAdapter = MoviesAdapter(mutableListOf())
+        topRatedMoviesAdapter = MoviesAdapter(mutableListOf()) { movie -> showMovieDetails(movie) }
         topRatedMovies.adapter = topRatedMoviesAdapter
 
         upcomingMovies.layoutManager = upcomingMoviesLayoutMgr
-        upcomingMoviesAdapter = MoviesAdapter(mutableListOf())
+        upcomingMoviesAdapter = MoviesAdapter(mutableListOf()) { movie -> showMovieDetails(movie) }
         upcomingMovies.adapter = upcomingMoviesAdapter
 
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
+
 
     }
     private fun getPopularMovies() {

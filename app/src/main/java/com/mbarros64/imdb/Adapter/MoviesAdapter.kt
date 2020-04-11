@@ -11,7 +11,8 @@ import com.mbarros64.imdb.R
 import com.mbarros64.imdb.model.Movie
 
 class MoviesAdapter(
-    private var movies: MutableList<Movie>
+    private var movies: MutableList<Movie>,
+    private val onMovieClick: (movie: Movie) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     fun appendMovies(movies: List<Movie>) {
@@ -21,6 +22,7 @@ class MoviesAdapter(
             movies.size - 1
         )
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -43,6 +45,7 @@ class MoviesAdapter(
                 .load("https://image.tmdb.org/t/p/w342${movie.posterPath}")
                 .transform(CenterCrop())
                 .into(poster)
+                    itemView.setOnClickListener { onMovieClick.invoke(movie) }
         }
     }
 }

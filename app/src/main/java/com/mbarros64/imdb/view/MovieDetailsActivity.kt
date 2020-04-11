@@ -34,25 +34,32 @@ class MovieDetailsActivity : AppCompatActivity() {
         rating = findViewById(R.id.movie_rating)
         releaseDate = findViewById(R.id.movie_release_date)
         overview = findViewById(R.id.movie_overview)
-    }
-    private fun populateDetails(extras: Bundle) {
-        extras.getString(MOVIE_BACKDROP)?.let { backdropPath ->
-            Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w1280$backdropPath")
-                .transform(CenterCrop())
-                .into(backdrop)
-        }
+        val extras = intent.extras
 
-        extras.getString(MOVIE_POSTER)?.let { posterPath ->
-            Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w342$posterPath")
-                .transform(CenterCrop())
-                .into(poster)
+        if (extras != null) {
+            populateDetails(extras)
+        } else {
+            finish()
         }
-
-        title.text = extras.getString(MOVIE_TITLE, "")
-        rating.rating = extras.getFloat(MOVIE_RATING, 0f) / 2
-        releaseDate.text = extras.getString(MOVIE_RELEASE_DATE, "")
-        overview.text = extras.getString(MOVIE_OVERVIEW, "")
     }
+private fun populateDetails(extras: Bundle) {
+    extras.getString(MOVIE_BACKDROP)?.let { backdropPath ->
+        Glide.with(this)
+            .load("https://image.tmdb.org/t/p/w1280$backdropPath")
+            .transform(CenterCrop())
+            .into(backdrop)
+    }
+
+    extras.getString(MOVIE_POSTER)?.let { posterPath ->
+        Glide.with(this)
+            .load("https://image.tmdb.org/t/p/w342$posterPath")
+            .transform(CenterCrop())
+            .into(poster)
+    }
+
+    title.text = extras.getString(MOVIE_TITLE, "")
+    rating.rating = extras.getFloat(MOVIE_RATING, 0f) / 2
+    releaseDate.text = extras.getString(MOVIE_RELEASE_DATE, "")
+    overview.text = extras.getString(MOVIE_OVERVIEW, "")
+}
 }
