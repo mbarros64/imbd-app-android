@@ -10,3 +10,6 @@ Uma aplicação em Kotlin utilizando a api do OMDb (www.omdbapi.com) que lista o
 
 *Glide*: Biblioteca para fazer o carregamento de imagens.
 
+**Tela inicial da aplicação:**
+
+  ![Screenshot](screenshot.png)
